@@ -1,0 +1,35 @@
+inputs:
+  router_name:
+    description: Name of router
+    type: string
+    default: temp_router
+
+  public_network_name:
+    description: Name of the public network
+    type: string
+    default: temp_network
+
+  public_subnet_name:
+    description: Name of public subnet
+    type: string
+    default: temp_subnet
+
+  public_subnet_cidr:
+    description: CIDR of public subnet
+    type: string
+    default: '192.168.98.0/24'
+
+  public_subnet_dns:
+    description: DNS list for the public subnet
+    type: string
+    default: ['8.8.4.4', '8.8.8.8']
+
+  public_subnet_allocation_pool_start:
+    description: Starting IP for this public subnet allocation
+    type: string
+    default: 192.168.98.51
+
+  public_subnet_allocation_pool_end:
+    description: Last IP for this public subnet allocation
+    type: string
+    default: 192.168.98.250

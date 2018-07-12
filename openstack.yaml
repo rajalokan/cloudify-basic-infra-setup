@@ -1,0 +1,62 @@
+tosca_definitions_version: cloudify_dsl_1_3
+
+imports:
+  - http://www.getcloudify.org/spec/cloudify/4.3/types.yaml
+  - plugin:cloudify-openstack-plugin
+  - imports/openstack_inputs.yaml
+  - imports/inputs.yaml
+
+
+dsl_definitions:
+
+  openstack_config: &openstack_config
+    username: { get_input: keystone_username }
+    user_domain_name: { get_input: keystone_user_domain_name }
+    password: { get_input: keystone_password }
+    project_name: { get_input: keystone_project_name }
+    project_domain_name: { get_input: keystone_project_domain_name }
+    auth_url: { get_input: keystone_url }
+    region: { get_input: region }
+
+
+node_templates:
+
+  public_subnet:
+    type: cloudify.openstack.nodes.Subnet
+    properties:
+      openstack_config: *openstack_config
+      resource_id: { get_input: public_subnet_name }
+      subnet:
+        ip_version: 4
+        cidr: { get_input: public_subnet_cidr }
+        dns_nameservers: { get_input: public_subnet_dns }
+        allocation_pools:
+        - start: { get_input: public_subnet_allocation_pool_start }
+          end: { get_input: public_subnet_allocation_pool_end }
+    relationships:
+      - target: public_network
+        type: cloudify.relationships.contained_in
+      - target: router
+        type: cloudify.openstack.subnet_connected_to_router
+
+  public_network:
+    type: cloudify.openstack.nodes.Network
+    properties:
+      openstack_config: *openstack_config
+      resource_id: { get_input: public_network_name }
+
+  router:
+    type: cloudify.openstack.nodes.Router
+    properties:
+      openstack_config: *openstack_config
+      resource_id: { get_input: router_name }
+    relationships:
+      - target: external_network
+        type: cloudify.relationships.connected_to
+
+  external_network:
+    type: cloudify.openstack.nodes.Network
+    properties:
+      openstack_config: *openstack_config
+      use_external_resource: true
+      resource_id: { get_secret: external_network_name }
