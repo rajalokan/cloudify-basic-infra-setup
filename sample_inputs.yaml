@@ -1,7 +1,7 @@
 # Resources
-router_name: dummy_router
-public_network_name: dummy_network
-public_subnet_name: dummy_subnet
+router_name: alok_router
+public_network_name: alok_network
+public_subnet_name: alok_subnet
 public_subnet_cidr: '192.168.98.0/24'
 public_subnet_dns: ['8.8.4.4', '8.8.8.8']
 public_subnet_allocation_pool_start: 192.168.98.50
